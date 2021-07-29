@@ -1,6 +1,7 @@
 import React from "react";
 import {AppBar,Toolbar,Drawer,Box,Typography,Button,TextField,Grid,makeStyles,Card} from '@material-ui/core'
 import axios from "axios";
+import { useSelector } from "react-redux";
 const useStyles= makeStyles(()=>({
    root:{
       width:"100%",
@@ -26,6 +27,8 @@ const useStyles= makeStyles(()=>({
 }))
 export default function Auth({form="login"}){
    const classes = useStyles();
+   const account = useSelector(state=>state.account);
+   console.log("account is",account);
    const [formValue,setFormValue] = React.useState({username:'',password:''});
    const [loading,setLoading] = React.useState(false);
    const handleChange = (e) => {
