@@ -53,7 +53,6 @@ export default function Auth({form="login"}){
       var result = await axios({
          method: 'post',
          url: "https://quick-chat-2021-server.herokuapp.com/login",
-         headers: {"Access-Control-Allow-Origin": "*","Access-Control-Allow-Methods": "POST"}, 
          data: {
            ...formValue
          }
