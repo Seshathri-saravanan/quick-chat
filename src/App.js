@@ -5,6 +5,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
   Link
 } from "react-router-dom";
 import Auth from "./Auth";
@@ -13,14 +14,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import {addMessage} from "./actions/chat";
 import {addAccount} from "./actions/account";
 import axios from "axios";
+import URL from "./constants";
 function App() {
   const dispatch = useDispatch();
   const account = useSelector(state=>state.account.account);
   React.useEffect(()=>{
     try{
       axios({
-        method: 'post',
-        url: "https://quick-chat-2021-server.herokuapp.com/account"
+        method: 'GET',
+        url: URL+"/account",
       }).then(result=>dispatch(addAccount(result.data.account)))
       
     }
@@ -31,21 +33,24 @@ function App() {
   })
   React.useEffect(()=>{
     console.log("account changed",account);
-    if(account.username){
       axios({
-        method: 'post',
-        url: "https://quick-chat-2021-server.herokuapp.com/message"
+        method: 'get',
+        url: URL+"/message",
+        data:{
+          username:"seshathri2019"
+        }
       }).then(result=>{
         console.log("message",result);
         dispatch(addMessage(result.data.message))
-      })
-    }
-  },[account])
+      }).catch(err=>console.error(err));
+  },[])
 
   return (
     <Router>
       <Switch>
-        
+      <Route exact path="/">
+        {account.username ? <Redirect to="/chat" /> : <Redirect to="/login" />}
+      </Route>
         <Route path="/login">
           <Auth/>
         </Route>

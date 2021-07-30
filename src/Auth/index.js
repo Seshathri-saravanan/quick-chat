@@ -3,6 +3,7 @@ import {AppBar,Toolbar,Drawer,Box,Typography,Button,TextField,Grid,makeStyles,Ca
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {addAccount} from "../actions/account"
+import URL from "../constants"
 const useStyles= makeStyles(()=>({
    root:{
       width:"100%",
@@ -42,7 +43,7 @@ export default function Auth({form="login"}){
    const handleSignUp = async() => {
       setLoading(true);
       try{
-      var result = await axios.post("https://quick-chat-2021-server.herokuapp.com/signup",formValue);
+      var result = await axios.post(URL+"/signup",formValue);
       console.log("signup result is",result)
       }
       catch(error){
@@ -57,7 +58,7 @@ export default function Auth({form="login"}){
          console.log("login input is",formValue)
       var result = await axios({
          method: 'post',
-         url: "https://quick-chat-2021-server.herokuapp.com/login",
+         url: URL+"/login",
          data: {
            ...formValue
          }
