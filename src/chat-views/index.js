@@ -12,6 +12,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import {addMessage, getContacts, getMessages} from "../CRUD/message";
+import { io } from "socket.io-client";
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -72,6 +74,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PermanentDrawerLeft() {
   const classes = useStyles();
+  const [socket,setSocket] = React.useState(null);
+  React.useEffect(()=>{
+    var newSocket = io("http://localhost:8080");
+    newSocket.on("connect", () => {
+      console.log("connected with",newSocket.id); // x8WIv7-mJelg7on_ALbx
+    });
+    
+    newSocket.on("disconnect", () => {
+      console.log("disconeected with",newSocket.id); // undefined
+    });
+    setSocket(newSocket);
+  },[]);
+  
   const threads = [
      {
          name:"angelina juliet",
@@ -186,7 +201,8 @@ export default function PermanentDrawerLeft() {
           />
           <Button 
             disabled={!message || !selectedContact}
-            onClick={()=>{addMessage("seshathri2019",selectedContact || newContact,message);setMessage("");}}
+            onClick={()=>{console.log("message send");socket && socket.send && socket.send("hello");}}
+            //onClick={()=>{addMessage("seshathri2019",selectedContact || newContact,message);setMessage("");}}
           >
             Send
           </Button>
