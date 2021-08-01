@@ -20,13 +20,15 @@ function App() {
   const dispatch = useDispatch();
   
   const account = useSelector(state=>state.account.account);
-  /*
-  React.useEffect(()=>{
+  React.useEffect(async ()=>{
     try{
-      axios({
+      var result = await axios({
         method: 'GET',
         url: URL+"/account",
-      }).then(result=>dispatch(addAccount(result.data.account)))
+      })
+      console.log("get account result",result);
+
+      dispatch(addAccount(result.data.account))
       
     }
     catch(err){
