@@ -3,6 +3,7 @@ import axios from "axios";
 export async function getContacts(userName){
    var result = await axios({
       method: 'get',
+      withCredentials:true,
       url: URL+"/contacts",
       
    })
@@ -20,6 +21,7 @@ export async function getContacts(userName){
 export async function getMessages(userName){
    var result = await axios({
       method: 'get',
+      withCredentials:true,
       url: URL+"/message",
    })
    var messages = result.data.messages;
@@ -38,6 +40,7 @@ export async function addMessage(senderUserName,receiverUserName,description){
    var result = await axios({
       method: 'post',
       url: URL+"/message",
+      withCredentials:true,
       data:{
          senderUserName:senderUserName,
          receiverUserName:receiverUserName,

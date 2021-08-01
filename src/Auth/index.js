@@ -60,6 +60,7 @@ export default function Auth({form="login"}){
          var result = await axios({
             method: 'post',
             url: URL+"/login",
+            withCredentials:true,
             data: {
             ...formValue
             }
