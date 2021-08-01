@@ -18,7 +18,9 @@ import URL from "./constants";
 function App() {
   
   const dispatch = useDispatch();
+  
   const account = useSelector(state=>state.account.account);
+  /*
   React.useEffect(()=>{
     try{
       axios({
@@ -32,6 +34,7 @@ function App() {
     }
     
   })
+  /*
   React.useEffect(()=>{
     console.log("account changed",account);
       axios({
@@ -45,7 +48,7 @@ function App() {
         dispatch(addMessage(result.data.message))
       }).catch(err=>console.error(err));
   },[])
-
+  */
   return (
     <Router>
       <Switch>
@@ -53,13 +56,16 @@ function App() {
         {account.username ? <Redirect to="/chat" /> : <Redirect to="/login" />}
       </Route>
         <Route path="/login">
-          <Auth/>
+        {account.username ? <Redirect to="/chat" /> : <Auth/>}
+          
         </Route>
         <Route path="/signup">
-          <Auth/>
+        {account.username ? <Redirect to="/chat" /> : <Auth/>}
+          
         </Route>
         <Route path="/chat">
-          <Chat/>
+          {account.username ? <Chat/>: <Redirect to="/login" />}
+          
         </Route>
       </Switch>
     </Router>

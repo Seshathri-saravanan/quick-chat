@@ -11,9 +11,10 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import {addMessage, getContacts, getMessages} from "../CRUD/message";
+import { getContacts, getMessages} from "../CRUD/message";
 import { io } from "socket.io-client";
-
+import URL from "../constants";
+import { useSelector } from 'react-redux';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +42,8 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
-    backgroundColor:"#1a90ff"
+    backgroundColor:"#1a90ff",
+    zIndex:"1200 !important"
   },
   drawer: {
     width: drawerWidth,
@@ -75,45 +77,60 @@ const useStyles = makeStyles((theme) => ({
 export default function PermanentDrawerLeft() {
   const classes = useStyles();
   const [socket,setSocket] = React.useState(null);
-  React.useEffect(()=>{
-    var newSocket = io("http://localhost:8080");
-    newSocket.on("connect", () => {
-      console.log("connected with",newSocket.id); // x8WIv7-mJelg7on_ALbx
-    });
-    
-    newSocket.on("disconnect", () => {
-      console.log("disconeected with",newSocket.id); // undefined
-    });
-    setSocket(newSocket);
-  },[]);
-  
-  const threads = [
-     {
-         name:"angelina juliet",
-         messages:["hello","hii","am","hello","hii","am","hello","hii","am","hello","hii","am","hello","hii","am"]
-     },
-     {
-         name:"roman",
-         messages:["hello","hii","am"]
-
-     }
-   ]
    const [selectedContact,setSelectedContact] = React.useState('');
    const [contacts,setContacts] = React.useState([]);
    const [message,setMessage] = React.useState("");
-   const [allMessages,setAllMessages] = React.useState([]);
+   const [allMessages,setAllMessages] = React.useState(null);
    const [selectedContactMessages,setSelectedContactMessages] = React.useState([]);
    const [newContact,setNewContact] = React.useState("");
-   const [userName,setUserName] = React.useState("seshathri2019");
-   React.useEffect(()=>{
+   const account = useSelector(state=>state.account.account);
+   const userName = account.username;
+   //const [userName,setUserName] = React.useState("seshathri2019");
+   const messageRef = React.useRef();
+   const updateMessages = () => {
+    if(!messageRef.current) return;
     var contactMessages = [];
-    for(var message of allMessages){
+    for(var message of messageRef.current){
       if(message.senderUserName==selectedContact || message.receiverUserName==selectedContact){
         contactMessages.push(message);
       }
     }
     setSelectedContactMessages(contactMessages);
-   },[selectedContact])
+   }
+   React.useEffect(()=>{
+    updateMessages();
+   },[selectedContact,messageRef.current])
+   const addMessage = (msg) => {
+    var newMessages = [...messageRef.current];
+    newMessages.push(msg);
+    console.log("newMessages2 is",newMessages,messageRef.current);
+    messageRef.current = newMessages;
+    updateMessages();
+   }
+   const handleMessage = (data) => {
+    var msg = JSON.parse(data);
+    console.log("received message",msg)
+    if(msg.senderUserName==userName || msg.receiverUserName==userName){
+      addMessage(msg);
+    }
+      
+  }
+  React.useEffect(()=>{
+    if(!socket){
+      var newSocket = io(URL);
+      newSocket.on("connect", () => {
+        console.log("connected with",newSocket.id); // x8WIv7-mJelg7on_ALbx
+      });
+      
+      newSocket.on("disconnect", () => {
+        console.log("disconeected with",newSocket.id); // undefined
+      });
+      newSocket.on("message",handleMessage)
+      setSocket(newSocket);
+    }
+    
+  },[]);
+  
    React.useEffect(()=>{
     getContacts(userName).then((contacts)=>{
       console.log("contacts is",contacts);
@@ -121,7 +138,7 @@ export default function PermanentDrawerLeft() {
     })
     getMessages(userName).then((messages)=>{
       console.log("messages is",messages);
-      setAllMessages(messages);
+      messageRef.current = messages
     })
    },[])
   
@@ -137,7 +154,7 @@ export default function PermanentDrawerLeft() {
       </AppBar>
       <Drawer
         className={classes.drawer}
-        variant="permanent"
+        variant={"permanent"}
         classes={{
           paper: classes.drawerPaper,
         }}
@@ -200,8 +217,16 @@ export default function PermanentDrawerLeft() {
             onChange={(e)=>setMessage(e.target.value)}
           />
           <Button 
-            disabled={!message || !selectedContact}
-            onClick={()=>{console.log("message send");socket && socket.send && socket.send("hello");}}
+            disabled={!message || !selectedContact || !socket}
+            onClick={()=>{
+              console.log("message send");
+              socket.send(JSON.stringify({
+                receiverUserName:selectedContact,
+                senderUserName:userName,
+                description:message
+              }));
+            }
+          }
             //onClick={()=>{addMessage("seshathri2019",selectedContact || newContact,message);setMessage("");}}
           >
             Send

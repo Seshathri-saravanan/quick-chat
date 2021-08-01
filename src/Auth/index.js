@@ -29,7 +29,7 @@ const useStyles= makeStyles(()=>({
 }))
 export default function Auth({form="login"}){
    const classes = useStyles();
-   const account = useSelector(state=>state.account);
+   //const account = useSelector(state=>state.account);
    const dispatch = useDispatch();
    //console.log("account is",account);
    const [formValue,setFormValue] = React.useState({username:'',password:''});
@@ -45,6 +45,7 @@ export default function Auth({form="login"}){
       try{
       var result = await axios.post(URL+"/signup",formValue);
       console.log("signup result is",result)
+      dispatch(addAccount(result.data.account));
       }
       catch(error){
          console.log("errot",error);
@@ -56,13 +57,13 @@ export default function Auth({form="login"}){
       setLoading(true);
       try{
          console.log("login input is",formValue)
-      var result = await axios({
-         method: 'post',
-         url: URL+"/login",
-         data: {
-           ...formValue
-         }
-       });
+         var result = await axios({
+            method: 'post',
+            url: URL+"/login",
+            data: {
+            ...formValue
+            }
+         });
        dispatch(addAccount(result.data.account));
        console.log("login result is",result)
       }
