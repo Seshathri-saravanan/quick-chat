@@ -6,6 +6,7 @@ export async function getContacts(userName){
       url: URL+"/contacts",
       
    })
+   console.log("in cRUD url",URL)
    var userContacts = [];
    var contacts = result.data.contacts;
    for(var contact of contacts){

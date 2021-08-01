@@ -16,7 +16,7 @@ import {addAccount} from "./actions/account";
 import axios from "axios";
 import URL from "./constants";
 function App() {
-  
+  console.log("URL is",URL);
   const dispatch = useDispatch();
   
   const account = useSelector(state=>state.account.account);
