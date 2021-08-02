@@ -16,7 +16,7 @@ import { io } from "socket.io-client";
 import URL from "../constants";
 import { useSelector } from 'react-redux';
 const drawerWidth = 240;
-
+const appBarHeight = 70;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -40,35 +40,39 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor:"#b3daff",
   },
   appBar: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    backgroundColor:"#1a90ff",
+    width: "100%",
+    height:appBarHeight,
+    backgroundColor:"#0066cc",
     zIndex:"1200 !important"
   },
   drawer: {
     width: drawerWidth,
+    marginTop:appBarHeight,
+    height: `calc(100% - ${appBarHeight}px)`,
     flexShrink: 0,
-    backgroundColor:"#1a90ff"
+    backgroundColor:"#0066cc",
+    zIndex:"300 !important"
   },
   drawerPaper: {
     width: drawerWidth,
-    backgroundColor:"#66b5ff"
+    marginTop:appBarHeight,
+    backgroundColor:"#ffffff"
   },
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    backgroundColor:"#cce6ff",
+    backgroundColor:"#ffffff",
     padding: theme.spacing(1),
     paddingTop:"80px",
     minHeight:"100vh",
     paddingBottom:"80px"
   },
   selectedContact:{
-    backgroundColor:"#1a90ff",
+    backgroundColor:"#cce6ff",
     color:"white",
     "&:hover":{
-      backgroundColor:"#1a90ff",
+      backgroundColor:"#cce6ff",
     color:"white",
     }
   }
@@ -144,10 +148,9 @@ export default function PermanentDrawerLeft() {
   
   return (
     <div className={classes.root}>
-      <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
-          <Typography variant="h6" noWrap>
+          <Typography variant="h4" noWrap>
             Quick chat
           </Typography>
         </Toolbar>
@@ -161,7 +164,6 @@ export default function PermanentDrawerLeft() {
         anchor="left"
       >
         
-        <Typography variant="h5" style={{color:"white",padding:"10px"}}>Contacts</Typography>
         <Button 
           fullWidth style={{color:"white"}} 
           onClick={()=>setSelectedContact("")}
