@@ -20,6 +20,7 @@ function App() {
   const dispatch = useDispatch();
   
   const account = useSelector(state=>state.account.account);
+
   React.useEffect(async ()=>{
     try{
       var result = await axios({
