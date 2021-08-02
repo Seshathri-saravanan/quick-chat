@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor:"#cce6ff",
     padding: theme.spacing(1),
     paddingTop:"80px",
-    height:"100vh",
+    minHeight:"100vh",
     paddingBottom:"80px"
   },
   selectedContact:{
