@@ -69,16 +69,19 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom:"80px"
   },
   selectedContact:{
-    backgroundColor:"#cce6ff",
+    backgroundColor:"#008ae6",
+    padding:"7px",
     color:"white",
     "&:hover":{
-      backgroundColor:"#cce6ff",
+      backgroundColor:"#008ae6",
     color:"white",
     }
   },
   contact:{
-    
-  }
+    padding:"7px",
+    borderBottom:"1px solid #1a90ff"
+  },
+
 }));
 
 export default function PermanentDrawerLeft() {
@@ -166,20 +169,21 @@ export default function PermanentDrawerLeft() {
         }}
         anchor="left"
       >
-        
-        <Button 
-          fullWidth style={{color:"white"}} 
-          onClick={()=>setSelectedContact("")}
-          className={!selectedContact?classes.selectedContact:{}}
-          >+ New</Button>
-        <List style={{color:"white"}}>
+        <List>
+            <ListItem 
+              button 
+              key={"new"}
+              onClick={()=>setSelectedContact("")}
+              className={!selectedContact?classes.selectedContact:classes.contact}
+            >
+              <ListItemText primary={"+ New"} style={{textAlign:"center"}}/>
+            </ListItem>
           {contacts.map((contact, index) => (
             <ListItem 
               button 
               onClick={(e)=>{setSelectedContact(contact.username)}}
               key={contact.username} 
-              style={{borderBottom:"1px solid #1a90ff"}}
-              className={contact.username==selectedContact?classes.selectedContact:{}}
+              className={contact.username==selectedContact?classes.selectedContact:classes.contact}
             >
               <ListItemAvatar>
                 <Avatar alt={contact.username}>{contact.username.substr(0,1)}</Avatar>

@@ -12,31 +12,19 @@ import Auth from "./Auth";
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {addMessage} from "./actions/chat";
-import {addAccount} from "./actions/account";
+import { getAccount } from './CRUD/account';
 import axios from "axios";
 import URL from "./constants";
+
 function App() {
   console.log("URL is",URL);
   const dispatch = useDispatch();
   
   const account = useSelector(state=>state.account.account);
 
-  React.useEffect(async ()=>{
-    try{
-      var result = await axios({
-        method: 'GET',
-        url: URL+"/account",
-      })
-      console.log("get account result",result);
-
-      dispatch(addAccount(result.data.account))
-      
-    }
-    catch(err){
-      console.log(err);
-    }
-    
-  })
+  React.useEffect(()=>{
+      getAccount(dispatch);
+  },[])
   /*
   React.useEffect(()=>{
     console.log("account changed",account);
