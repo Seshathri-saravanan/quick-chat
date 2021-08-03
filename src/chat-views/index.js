@@ -29,13 +29,15 @@ const useStyles = makeStyles((theme) => ({
   message:{
     color:"black",
     display:"flex",
+    fontSize:"2rem",
    margin:"20px 10px 20px 10px",
-   padding:"12px",
+   padding:"15px",
     backgroundColor:"white",
   },
   sentMessage:{
+    fontSize:"2rem",
     display:"flex",
-    padding:"12px",
+    padding:"15px",
    margin:"20px 10px 20px 10px",
     backgroundColor:"#b3daff",
   },
@@ -62,6 +64,8 @@ const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
+    paddingLeft:"50px",
+    paddingRight:"50px",
     backgroundColor:"#ccebff",
     padding: theme.spacing(1),
     paddingTop:"80px",
@@ -213,6 +217,7 @@ export default function PermanentDrawerLeft() {
                 primary={thread.username} 
                 secondary={thread.messages.length>0 && thread.messages[thread.messages.length-1].description}
               />
+              <Typography>{thread.messages.length>0 && thread.messages[thread.messages.length-1].createAt}</Typography>
               </ListItem>
           ))}
         </List>
@@ -241,16 +246,17 @@ export default function PermanentDrawerLeft() {
               </Grid>
             )}
         </Grid>
-        <Box style={{display:"flex",position:"fixed",bottom:"0px",width:"100%"}} component={Paper}>
+        <Box style={{display:"flex",position:"fixed",bottom:"0px",width:`calc(95% - ${drawerWidth}px)`}} component={Paper}>
           <TextField
             variant="outlined"
             placeholder="send a message"
-            style={{width:"75%"}}
+            style={{flexGrow:10}}
             value={message}
             onChange={(e)=>setMessage(e.target.value)}
           />
           <Button 
             disabled={!message || (!selectedThread.username && !newContact) || !socket }
+            style={{flexGrow:1,marginRight:"auto"}}
             onClick={()=>{
               console.log("message send");
               socket.send(JSON.stringify({
