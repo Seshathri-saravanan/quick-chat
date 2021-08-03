@@ -87,44 +87,49 @@ const useStyles = makeStyles((theme) => ({
 export default function PermanentDrawerLeft() {
   const classes = useStyles();
   const [socket,setSocket] = React.useState(null);
-   const [selectedContact,setSelectedContact] = React.useState('');
-   const [contacts,setContacts] = React.useState([]);
    const [message,setMessage] = React.useState("");
-   const [allMessages,setAllMessages] = React.useState(null);
-   const [selectedContactMessages,setSelectedContactMessages] = React.useState([]);
    const [newContact,setNewContact] = React.useState("");
    const account = useSelector(state=>state.account.account);
    const userName = account.username;
-   //const [userName,setUserName] = React.useState("seshathri2019");
-   const messageRef = React.useRef();
-   const updateMessages = () => {
-    if(!messageRef.current) return;
-    var contactMessages = [];
-    for(var message of messageRef.current){
-      if(message.senderUserName==selectedContact || message.receiverUserName==selectedContact){
-        contactMessages.push(message);
+   const stateRef = React.useRef([]);
+   const [threads,setThreads] = React.useState(stateRef.current);
+   const newThread = {username:"",messages:[],contact:""}
+   const [selectedThread,setSelectedThread] = React.useState(newThread);
+   const addMessage = (msg) => {  
+     console.log("add message called");
+      var threadsArr = [];
+      for(var thread of stateRef.current){
+        var updatedMessages = [...thread.messages];
+        if(msg.senderUserName==thread.username || msg.receiverUserName==thread.username){
+          updatedMessages.push({...msg});
+        }
+        console.log("updatedMessages",updatedMessages)
+        threadsArr.push({
+          ...thread,
+          messages:updatedMessages
+        })
       }
-    }
-    setSelectedContactMessages(contactMessages);
-   }
-   React.useEffect(()=>{
-    updateMessages();
-   },[selectedContact,messageRef.current])
-   const addMessage = (msg) => {
-    var newMessages = [...messageRef.current];
-    newMessages.push(msg);
-    console.log("newMessages2 is",newMessages,messageRef.current);
-    messageRef.current = newMessages;
-    updateMessages();
+      console.log("newthreads are",threadsArr);
+      stateRef.current = threadsArr;
+      setThreads(threadsArr);
    }
    const handleMessage = (data) => {
     var msg = JSON.parse(data);
-    console.log("received message",msg)
+    console.log("received message",msg,userName)
     if(msg.senderUserName==userName || msg.receiverUserName==userName){
       addMessage(msg);
     }
       
   }
+
+  React.useEffect(()=>{
+    for(var thread of threads){
+      if(thread.username==selectedThread.username){
+        setSelectedThread(thread);
+      }
+    }
+  },[threads]);
+
   React.useEffect(()=>{
     if(!socket){
       var newSocket = io(URL);
@@ -142,14 +147,29 @@ export default function PermanentDrawerLeft() {
   },[]);
   
    React.useEffect(()=>{
-    getContacts(userName).then((contacts)=>{
+    getContacts(userName).then(async (contacts)=>{
       console.log("contacts is",contacts);
-      setContacts(contacts);
+      var messages = await getMessages(userName)
+      var threadsArr = [];
+      for(var contact of contacts){
+        var thread = {
+          username:contact.username,
+          messages:[],
+          contact:contact
+        }
+        for(var message of messages){
+          var username = contact.username;
+          if(message.senderUserName==username || message.receiverUserName==username){
+            thread.messages.push(message);
+          }
+        }
+        threadsArr.push(thread);
+      }
+      console.log("threads ",threadsArr)
+      stateRef.current = [...threadsArr];
+      setThreads(threadsArr)
     })
-    getMessages(userName).then((messages)=>{
-      console.log("messages is",messages);
-      messageRef.current = messages
-    })
+    
    },[])
   
   return (
@@ -173,23 +193,27 @@ export default function PermanentDrawerLeft() {
             <ListItem 
               button 
               key={"new"}
-              onClick={()=>setSelectedContact("")}
-              className={!selectedContact?classes.selectedContact:classes.contact}
+              onClick={()=>setSelectedThread({...newThread})}
+              className={!selectedThread.contact?classes.selectedContact:classes.contact}
             >
               <ListItemText primary={"+ New"} style={{textAlign:"center"}}/>
             </ListItem>
-          {contacts.map((contact, index) => (
+          {threads.map((thread, index) => (
             <ListItem 
               button 
-              onClick={(e)=>{setSelectedContact(contact.username)}}
-              key={contact.username} 
-              className={contact.username==selectedContact?classes.selectedContact:classes.contact}
+              onClick={(e)=>{setSelectedThread({...thread})}}
+              key={thread.username} 
+              className={thread.username==selectedThread.username?classes.selectedContact:classes.contact}
             >
               <ListItemAvatar>
-                <Avatar alt={contact.username}>{contact.username.substr(0,1)}</Avatar>
+                <Avatar alt={thread.username}>{thread.username.substr(0,1)}</Avatar>
               </ListItemAvatar>
-              <ListItemText primary={contact.username} />
-            </ListItem>
+            
+              <ListItemText 
+                primary={thread.username} 
+                secondary={thread.messages.length>0 && thread.messages[thread.messages.length-1].description}
+              />
+              </ListItem>
           ))}
         </List>
         
@@ -197,7 +221,7 @@ export default function PermanentDrawerLeft() {
 
       <Grid className={classes.content} container direction={"row"}>
         <div className={classes.toolbar} />
-          {!selectedContact && 
+          {!selectedThread.contact && 
           <>
           <Typography>To :</Typography>
           <TextField
@@ -209,7 +233,7 @@ export default function PermanentDrawerLeft() {
           </>
           }
           <Grid container item alignItems="flex-start" alignContent={"flex-start"}>
-            {selectedContactMessages.map((msg,ind)=>
+            {selectedThread.messages.map((msg,ind)=>
               <Grid container item justifyContent={msg.senderUserName==userName?"flex-end":"flex-start"}>
                 <Card className={msg.senderUserName!=userName ?classes.message:classes.sentMessage}>
                     <Typography >{msg.description}</Typography>
@@ -226,14 +250,15 @@ export default function PermanentDrawerLeft() {
             onChange={(e)=>setMessage(e.target.value)}
           />
           <Button 
-            disabled={!message || !selectedContact || !socket}
+            disabled={!message || (!selectedThread.username && !newContact) || !socket }
             onClick={()=>{
               console.log("message send");
               socket.send(JSON.stringify({
-                receiverUserName:selectedContact,
+                receiverUserName:selectedThread.username || newContact,
                 senderUserName:userName,
                 description:message
               }));
+              setMessage("");
             }
           }
             //onClick={()=>{addMessage("seshathri2019",selectedContact || newContact,message);setMessage("");}}
