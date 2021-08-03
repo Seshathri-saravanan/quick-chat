@@ -15,7 +15,7 @@ import { getContacts, getMessages} from "../CRUD/message";
 import { io } from "socket.io-client";
 import URL from "../constants";
 import { useSelector } from 'react-redux';
-const drawerWidth = 240;
+const drawerWidth = 280;
 const appBarHeight = 70;
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     width: "100%",
     height:appBarHeight,
-    backgroundColor:"#0066cc",
+    backgroundColor:"#008ae6",
     zIndex:"1200 !important"
   },
   drawer: {
@@ -75,6 +75,9 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor:"#cce6ff",
     color:"white",
     }
+  },
+  contact:{
+    
   }
 }));
 

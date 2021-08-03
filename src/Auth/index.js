@@ -7,24 +7,28 @@ import URL from "../constants"
 const useStyles= makeStyles(()=>({
    root:{
       width:"100%",
-      height:"99vh",
+      height:"100vh",
+      backgroundColor:"#008ae6"
    },
    textField:{
-      display:"flex",
-      alignSelf:"center",
-      padding:"10px",
-      margin:"15px"
+      display:"block",
+      margin:"25px"
    },
    heading:{
       margin:"15px",
+      color:"#006bb3"
    },
    primaryButton:{
-      backgroundColor:"black",
+      backgroundColor:"#008ae6",
       display:"block",
       color:"white",
+      "&:hover":{
+         backgroundColor:"#007acc"
+      }
    },
    card:{
       padding:"15px",
+      boxShadow:"10px"
    }
 }))
 export default function Auth({form="login"}){
@@ -77,7 +81,7 @@ export default function Auth({form="login"}){
    return (
       <Grid container justify="center" alignItems="center" className={classes.root}>
          <Card className={classes.card}>
-            <Typography variant={"h2"} className={classes.heading} align="center">Quick chat</Typography>
+            <Typography variant={"h4"} className={classes.heading} align="center">Quick chat</Typography>
             <TextField 
                label={"username"} 
                name="username"
@@ -88,6 +92,7 @@ export default function Auth({form="login"}){
             <TextField 
                label={"password"}
                name="password"
+               type="password"
                value={formValue.password}
                className={classes.textField}
                onChange={handleChange}
