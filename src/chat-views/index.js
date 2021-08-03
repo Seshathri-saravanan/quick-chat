@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    backgroundColor:"#ffffff",
+    backgroundColor:"#ccebff",
     padding: theme.spacing(1),
     paddingTop:"80px",
     minHeight:"100vh",
