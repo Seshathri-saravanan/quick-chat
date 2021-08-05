@@ -17,6 +17,8 @@ import URL from "../constants";
 import ArrowDropDownCircleOutlinedIcon from '@material-ui/icons/ArrowDropDownCircleOutlined';
 import moment from "moment";
 import { useSelector } from 'react-redux';
+import { Scrollbars } from "react-custom-scrollbars";
+
 const drawerWidth = 280;
 const appBarHeight = 70;
 const useStyles = makeStyles((theme) => ({
@@ -244,7 +246,9 @@ export default function PermanentDrawerLeft() {
             </TextField>
           </>
           }
-          <Grid container item alignItems="flex-start" alignContent={"flex-start"}>
+          <Scrollbars >
+          <Grid container item alignItems="flex-start" alignContent={"flex-start"} style={{overflowX:"hidden"}}>
+            
             {selectedThread.messages.map((msg,ind)=>
               <Grid container item justifyContent={msg.senderUserName==userName?"flex-end":"flex-start"}>
                 <Card 
@@ -260,7 +264,9 @@ export default function PermanentDrawerLeft() {
                 </Card>
               </Grid>
             )}
+            
         </Grid>
+        </Scrollbars>
         <IconButton onClick={scrollToBottom} style={{position:"fixed",right:"10px",bottom:"70px"}}>
            <ArrowDropDownCircleOutlinedIcon fontSize={"large"} style={{color:"#008ae6"}}/>
           </IconButton>
