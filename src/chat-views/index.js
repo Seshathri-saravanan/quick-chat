@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles,Grid,TextField, Button ,Box,Paper,ListItemAvatar,Avatar} from '@material-ui/core';
+import { makeStyles,Grid,TextField, Button ,Box,Paper,ListItemAvatar,Avatar, IconButton} from '@material-ui/core';
 import {Card} from "@material-ui/core"
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,6 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { getContacts, getMessages} from "../CRUD/message";
 import { io } from "socket.io-client";
 import URL from "../constants";
+import ArrowDropDownCircleOutlinedIcon from '@material-ui/icons/ArrowDropDownCircleOutlined';
 import { useSelector } from 'react-redux';
 const drawerWidth = 280;
 const appBarHeight = 70;
@@ -99,6 +100,7 @@ export default function PermanentDrawerLeft() {
    const [threads,setThreads] = React.useState(stateRef.current);
    const newThread = {username:"",messages:[],contact:""}
    const [selectedThread,setSelectedThread] = React.useState(newThread);
+   const lastMessageRef = React.useRef(null);
    const addMessage = (msg) => {  
      console.log("add message called");
       var threadsArr = [];
@@ -175,7 +177,10 @@ export default function PermanentDrawerLeft() {
     })
     
    },[])
-  
+  const scrollToBottom = () => {
+    lastMessageRef.current && lastMessageRef.current.scrollIntoView()
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -240,13 +245,20 @@ export default function PermanentDrawerLeft() {
           <Grid container item alignItems="flex-start" alignContent={"flex-start"}>
             {selectedThread.messages.map((msg,ind)=>
               <Grid container item justifyContent={msg.senderUserName==userName?"flex-end":"flex-start"}>
-                <Card className={msg.senderUserName!=userName ?classes.message:classes.sentMessage}>
+                <Card 
+                  className={msg.senderUserName!=userName ?classes.message:classes.sentMessage}
+                  ref={ind+1==selectedThread.messages.length?lastMessageRef:null}
+                >
                     <Typography >{msg.description}</Typography>
                 </Card>
               </Grid>
             )}
         </Grid>
+        <IconButton onClick={scrollToBottom} style={{position:"fixed",right:"10px",bottom:"70px"}}>
+           <ArrowDropDownCircleOutlinedIcon fontSize={"large"} style={{color:"#008ae6"}}/>
+          </IconButton>
         <Box style={{display:"flex",position:"fixed",bottom:"0px",width:`calc(95% - ${drawerWidth}px)`}} component={Paper}>
+         
           <TextField
             variant="outlined"
             placeholder="send a message"
@@ -271,6 +283,7 @@ export default function PermanentDrawerLeft() {
           >
             Send
           </Button>
+          
         </Box>
       </Grid>
     </div>
