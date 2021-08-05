@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles,Grid,TextField, Button ,Box,Paper,ListItemAvatar,Avatar, IconButton} from '@material-ui/core';
+import { makeStyles,Grid,TextField, Button ,Box,Paper,ListItemAvatar,Avatar, IconButton, CardContent} from '@material-ui/core';
 import {Card} from "@material-ui/core"
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,6 +15,7 @@ import { getContacts, getMessages} from "../CRUD/message";
 import { io } from "socket.io-client";
 import URL from "../constants";
 import ArrowDropDownCircleOutlinedIcon from '@material-ui/icons/ArrowDropDownCircleOutlined';
+import moment from "moment";
 import { useSelector } from 'react-redux';
 const drawerWidth = 280;
 const appBarHeight = 70;
@@ -222,7 +223,8 @@ export default function PermanentDrawerLeft() {
                 primary={thread.username} 
                 secondary={thread.messages.length>0 && thread.messages[thread.messages.length-1].description}
               />
-              <Typography>{thread.messages.length>0 && thread.messages[thread.messages.length-1].createAt}</Typography>
+              <Typography style={{fontSize:"0.7rem",color:"gray"}}>{thread.messages.length>0 && 
+              moment(thread.messages[thread.messages.length-1].createdAt).format("MMM Do, HH:mm")}</Typography>
               </ListItem>
           ))}
         </List>
@@ -249,7 +251,12 @@ export default function PermanentDrawerLeft() {
                   className={msg.senderUserName!=userName ?classes.message:classes.sentMessage}
                   ref={ind+1==selectedThread.messages.length?lastMessageRef:null}
                 >
-                    <Typography >{msg.description}</Typography>
+                  <CardContent style={{margin:"0",padding:"0"}}>
+                    <Typography>{msg.description}</Typography>
+                    <Typography style={{fontSize:"0.8rem",display:"block",textAlign:"left",color:"gray"}}>
+                     {moment(msg.createdAt).format("MMM Do, HH:mm")}
+                    </Typography>
+                    </CardContent>
                 </Card>
               </Grid>
             )}
