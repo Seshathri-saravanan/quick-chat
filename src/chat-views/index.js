@@ -232,9 +232,20 @@ export default function PermanentDrawerLeft() {
         </List>
         
       </Drawer>
-
+      
       <Grid className={classes.content} container direction={"row"}>
-        <div className={classes.toolbar} />
+      <Scrollbars 
+        renderTrackHorizontal={() =>
+        <div style={{ backgroundColor: 'blue',color:"blue" }}/>
+        
+        }
+        style={{ width: "100%", height: "100%" }}
+        autoHide
+        // Hide delay in ms
+        autoHideTimeout={1000}
+        // Duration for hide animation in ms.
+        autoHideDuration={200}
+      >
           {!selectedThread.contact && 
           <>
           <Typography>To :</Typography>
@@ -246,7 +257,7 @@ export default function PermanentDrawerLeft() {
             </TextField>
           </>
           }
-          <Scrollbars >
+          
           <Grid container item alignItems="flex-start" alignContent={"flex-start"} style={{overflowX:"hidden"}}>
             
             {selectedThread.messages.map((msg,ind)=>
@@ -266,8 +277,8 @@ export default function PermanentDrawerLeft() {
             )}
             
         </Grid>
-        </Scrollbars>
-        <IconButton onClick={scrollToBottom} style={{position:"fixed",right:"10px",bottom:"70px"}}>
+        
+        <IconButton onClick={scrollToBottom} style={{position:"fixed",right:"0px",bottom:"70px"}}>
            <ArrowDropDownCircleOutlinedIcon fontSize={"large"} style={{color:"#008ae6"}}/>
           </IconButton>
         <Box style={{display:"flex",position:"fixed",bottom:"0px",width:`calc(95% - ${drawerWidth}px)`}} component={Paper}>
@@ -298,7 +309,9 @@ export default function PermanentDrawerLeft() {
           </Button>
           
         </Box>
+        </Scrollbars>
       </Grid>
+      
     </div>
   );
 }
