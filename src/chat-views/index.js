@@ -24,6 +24,7 @@ const appBarHeight = 70;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+    fontFamily: "'PT Serif', serif !important",
     backgroundColor:"#cce6ff",
   },
   card:{
@@ -185,10 +186,10 @@ export default function PermanentDrawerLeft() {
   }
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} >
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
-          <Typography variant="h4" noWrap>
+          <Typography variant="h4" noWrap style={{fontFamily: "'PT Serif', serif"}}>
             Quick chat
           </Typography>
         </Toolbar>
@@ -222,6 +223,7 @@ export default function PermanentDrawerLeft() {
               </ListItemAvatar>
             
               <ListItemText 
+              style={{fontFamily: "'PT Serif', serif"}}
                 primary={thread.username} 
                 secondary={thread.messages.length>0 && thread.messages[thread.messages.length-1].description}
               />
@@ -267,7 +269,7 @@ export default function PermanentDrawerLeft() {
                   ref={ind+1==selectedThread.messages.length?lastMessageRef:null}
                 >
                   <CardContent style={{margin:"0",padding:"0"}}>
-                    <Typography>{msg.description}</Typography>
+                    <Typography style={{fontFamily: "'PT Serif', serif"}}>{msg.description}</Typography>
                     <Typography style={{fontSize:"0.8rem",display:"block",textAlign:"left",color:"gray"}}>
                      {moment(msg.createdAt).format("MMM Do, HH:mm")}
                     </Typography>
