@@ -18,7 +18,7 @@ import ArrowDropDownCircleOutlinedIcon from '@material-ui/icons/ArrowDropDownCir
 import moment from "moment";
 import { useSelector } from 'react-redux';
 import { Scrollbars } from "react-custom-scrollbars";
-
+import Header from "./header";
 const drawerWidth = 280;
 const appBarHeight = 70;
 const useStyles = makeStyles((theme) => ({
@@ -187,13 +187,7 @@ export default function PermanentDrawerLeft() {
 
   return (
     <div className={classes.root} >
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <Typography variant="h4" noWrap style={{fontFamily: "'PT Serif', serif"}}>
-            Quick chat
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <Header/>
       <Drawer
         className={classes.drawer}
         variant={"permanent"}
