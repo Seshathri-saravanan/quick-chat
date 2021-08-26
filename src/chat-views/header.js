@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles,AppBar,Toolbar,List,Typography} from '@material-ui/core';
+import { makeStyles,AppBar,Toolbar,List,Typography, Button} from '@material-ui/core';
 const appBarHeight = 70;
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -17,6 +17,13 @@ export default function Header(){
       <Typography variant="h4" noWrap style={{fontFamily: "'PT Serif', serif"}}>
          Quick chat
       </Typography>
+      <Button style={{display:"block",marginLeft:"auto",color:"white"}} 
+         onClick={()=>{
+            document.cookie =  'user=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            window.location.reload();
+         }}>
+         logout
+      </Button>
       </Toolbar>
    </AppBar>
    );
