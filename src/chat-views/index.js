@@ -74,11 +74,11 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom:"80px"
   },
   selectedContact:{
-    backgroundColor:"#008ae6",
+    backgroundColor:"#325980",
     padding:"7px",
     color:"white",
     "&:hover":{
-      backgroundColor:"#008ae6",
+      backgroundColor:"#0b5487",
     color:"white",
     }
   },
