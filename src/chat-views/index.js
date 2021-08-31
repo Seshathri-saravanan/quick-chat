@@ -35,8 +35,8 @@ const useStyles = makeStyles((theme) => ({
     color:"black",
     display:"flex",
     fontSize:"2rem",
-   margin:"20px 10px 20px 10px",
    padding:"15px",
+   margin:"20px",
    color:"#325980",
     backgroundColor:"white",
   },
@@ -44,15 +44,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize:"2rem",
     display:"flex",
     padding:"15px",
-   margin:"20px 10px 20px 10px",
-   color:"#c4c8cc",
+    margin:"20px",
+    color:"#c4c8cc",
     backgroundColor:"#325980",
-  },
-  appBar: {
-    width: "100%",
-    height:appBarHeight,
-    backgroundColor:"#008ae6",
-    zIndex:"1200 !important"
   },
   drawer: {
     width: drawerWidth,
@@ -73,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     paddingLeft:"50px",
     paddingRight:"50px",
-    backgroundColor:"#ccebff",
+    backgroundColor:"#537099",
     padding: theme.spacing(1),
     paddingTop:"80px",
     minHeight:"100vh",
@@ -107,6 +101,7 @@ export default function PermanentDrawerLeft() {
    const newThread = {username:"",messages:[],contact:""}
    const [selectedThread,setSelectedThread] = React.useState(newThread);
    const lastMessageRef = React.useRef(null);
+   const scrollBarRef = React.useRef(null);
    const addMessage = (msg) => {  
      console.log("add message called");
       var threadsArr = [];
@@ -138,10 +133,14 @@ export default function PermanentDrawerLeft() {
     for(var thread of threads){
       if(thread.username==selectedThread.username){
         setSelectedThread(thread);
+        
       }
     }
   },[threads]);
 
+  React.useEffect(()=>{
+    scrollToBottom();
+  },[selectedThread])
   React.useEffect(()=>{
     if(!socket){
       var newSocket = io(URL);
@@ -184,7 +183,7 @@ export default function PermanentDrawerLeft() {
     
    },[])
   const scrollToBottom = () => {
-    lastMessageRef.current && lastMessageRef.current.scrollIntoView()
+    scrollBarRef.current && scrollBarRef.current.scrollToBottom()
   }
 
   return (
@@ -233,8 +232,9 @@ export default function PermanentDrawerLeft() {
       
       <Grid className={classes.content} container direction={"row"}>
       <Scrollbars 
+        ref={scrollBarRef}
         renderTrackHorizontal={() =>
-        <div style={{ backgroundColor: 'blue',color:"blue" }}/>
+        <div style={{ display:"none"}}/>
         
         }
         style={{ width: "100%", height: "100%" }}
@@ -277,7 +277,7 @@ export default function PermanentDrawerLeft() {
         </Grid>
         
         <IconButton onClick={scrollToBottom} style={{position:"fixed",right:"0px",bottom:"70px"}}>
-           <ArrowDropDownCircleOutlinedIcon fontSize={"large"} style={{color:"#008ae6"}}/>
+           <ArrowDropDownCircleOutlinedIcon fontSize={"large"} style={{color:"white"}}/>
           </IconButton>
         <Box style={{display:"flex",position:"fixed",bottom:"0px",width:`calc(95% - ${drawerWidth}px)`}} component={Paper}>
          
