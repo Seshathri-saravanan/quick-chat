@@ -18,3 +18,12 @@ export async function getAccount(dispatch){
    }
    return null;
 }
+
+export async function logout(){
+   var result = await axios({
+      method: 'get',
+      url: URL+"/logout",
+      withCredentials: true
+   });
+   return result.data.logout;
+}

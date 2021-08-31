@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles,AppBar,Toolbar,List,Typography, Button} from '@material-ui/core';
+import {logout} from "../CRUD/account";
 const appBarHeight = 70;
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -9,8 +10,15 @@ const useStyles = makeStyles((theme) => ({
     zIndex:"1200 !important"
   },
 }))
+
+
 export default function Header(){
    const classes= useStyles();
+   const handleLogout = async () => {
+      var result = await logout();
+      if(result)
+         window.location.reload();
+   }
    return (
    <AppBar position="fixed" className={classes.appBar}>
       <Toolbar>
@@ -18,10 +26,7 @@ export default function Header(){
          Quick chat
       </Typography>
       <Button style={{display:"block",marginLeft:"auto",color:"white"}} 
-         onClick={()=>{
-            document.cookie =  'user=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-            window.location.reload();
-         }}>
+         onClick={handleLogout}>
          logout
       </Button>
       </Toolbar>
