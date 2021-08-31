@@ -43,8 +43,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize:"2rem",
     display:"flex",
     padding:"15px",
-   margin:"20px 10px 20px 10px",
-    backgroundColor:"#b3daff",
+    color:"#c4c8cc",
+    margin:"20px 10px 20px 10px",
+    backgroundColor:"#348ceb",
   },
   appBar: {
     width: "100%",
