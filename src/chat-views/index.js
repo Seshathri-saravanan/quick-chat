@@ -30,7 +30,7 @@ import moment from "moment";
 import { useSelector } from "react-redux";
 import { Scrollbars } from "react-custom-scrollbars";
 import Header from "./header";
-const drawerWidth = 280;
+const drawerWidth = 380;
 const appBarHeight = 70;
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
   },
   contact: {
     padding: "7px",
-    borderBottom: "1px solid #1a90ff",
+    borderBottom: "1px solid #1d2d47",
   },
 }));
 
@@ -209,7 +209,7 @@ export default function PermanentDrawerLeft() {
         }}
         anchor="left"
       >
-        <List>
+        <List style={{ marginLeft: "10px", marginRight: "10px" }}>
           <ListItem
             button
             key={"new"}
@@ -236,7 +236,10 @@ export default function PermanentDrawerLeft() {
               }
             >
               <ListItemAvatar>
-                <Avatar alt={thread.username}>
+                <Avatar
+                  alt={thread.username}
+                  style={{ backgroundColor: "#002966" }}
+                >
                   {thread.username.substr(0, 1)}
                 </Avatar>
               </ListItemAvatar>
@@ -249,7 +252,7 @@ export default function PermanentDrawerLeft() {
                   thread.messages[thread.messages.length - 1].description
                 }
               />
-              <Typography style={{ fontSize: "0.7rem", color: "gray" }}>
+              <Typography style={{ fontSize: "0.7rem" }}>
                 {thread.messages.length > 0 &&
                   moment(
                     thread.messages[thread.messages.length - 1].createdAt
@@ -315,8 +318,13 @@ export default function PermanentDrawerLeft() {
                       : null
                   }
                 >
-                  <CardContent style={{ margin: "0", padding: "0" }}>
-                    <Typography style={{ fontFamily: "'PT Serif', serif" }}>
+                  <CardContent style={{ margin: "0", padding: "3px 5px" }}>
+                    <Typography
+                      style={{
+                        fontFamily: "'PT Serif', serif",
+                        fontSize: "1.2rem",
+                      }}
+                    >
                       {msg.description}
                     </Typography>
                     <Typography
@@ -324,7 +332,8 @@ export default function PermanentDrawerLeft() {
                         fontSize: "0.8rem",
                         display: "block",
                         textAlign: "left",
-                        color: "gray",
+                        color: "black",
+                        marginLeft: "40px",
                       }}
                     >
                       {moment(msg.createdAt).format("MMM Do, HH:mm")}
